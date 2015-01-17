@@ -1,0 +1,16 @@
+{
+  "name": "graph-test",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.11.0",
+    "socket.io": "^1.2.1"
+  },
+  "description": "Test socket.io and realtime graphs",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Justin Valentini",
+  "license": "ISC"
+}
