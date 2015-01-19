@@ -67,9 +67,9 @@
        ticks: { time: 5, x: 5, y: 5 }
      });
 
-     /* setInterval(function() {
-        pushChartData(Math.random() * 100, Math.random() * 100);
-        }, 1000); */
+     setInterval(function() {
+       pushChartData(Math.random() * 100, Math.random() * 100);
+     }, 10000);
 
      var socket = io();
      $('form').submit(function(){
