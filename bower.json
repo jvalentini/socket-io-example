@@ -1,0 +1,25 @@
+{
+  "name": "graph-test",
+  "main": "index.js",
+  "version": "0.0.0",
+  "authors": [
+    "Justin Valentini <justin.valentini@gmail.com>"
+  ],
+  "description": "Graph test",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "epoch": "~0.6.0",
+    "d3": "~3.5.3"
+  }
+}
