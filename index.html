@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My chat</title>
+    <style>
+     * { margin: 0; padding: 0; box-sizing: border-box; }
+     body { font: 13px Helvetica, Arial; }
+     form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+     form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+     form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+     #messages { list-style-type: none; margin: 0; padding: 0; }
+     #messages li { padding: 5px 10px; }
+     /* #messages li:nth-child(odd) { background: #eee; } */
+     #mymessage { background: #238; }
+     #othermessage { background: #832; }
+    </style>
+    <link rel="stylesheet" type="text/css" href="epoch/epoch.min.css">
+  </head>
+  <body>
+    <div id="chart" class="epoch category10" style="height: 200px;"></div>
+    <label for="myName">Name: </label>
+    <input type="text" name="myName" id="myName" />
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="d3/d3.min.js"></script>
+    <script src="epoch/epoch.min.js"></script>
+    <script>
+     var getTime = function() {
+       return new Date().getTime() / 1000;
+     };
+
+     var pushChartData = function(i, j) {
+       nextDataPoint = [ {time: getTime(), y: i }, {time: getTime(), y: j } ];
+       myChart.push(nextDataPoint);
+     };
+
+     var getInput = function(msg) {
+       var parsed = parseInt(msg);
+       if (isNaN(parsed)) parsed = 50;
+       if (parsed > 100) parsed = 100;
+       if (parsed < 0) parsed = 0;
+       return parsed;
+     };
+
+     var myName = function() {
+       return $('#myName').val();
+     };
+
+     var data = [
+       {
+         label: "Series 1",
+         values: [ {time: getTime(), y: 100}, {time: getTime()+1, y: 80} ]
+       },
+       {
+         label: "Series 2",
+         values: [ {time: getTime(), y: 78}, {time: getTime()+1, y: 98} ]
+       }
+     ];
+     var myChart = $('#chart').epoch({
+       type: 'time.line',
+       data: data,
+       axes: ['left', 'right', 'bottom'],
+       ticks: { time: 5, x: 5, y: 5 }
+     });
+
+     /* setInterval(function() {
+        pushChartData(Math.random() * 100, Math.random() * 100);
+        }, 1000); */
+
+     var socket = io();
+     $('form').submit(function(){
+       var msg = $('#m').val();
+       $('#messages').append($('<li>', { id: 'mymessage' }).text(myName() + ": " + msg));
+       pushChartData(getInput(msg), getInput(msg));
+       socket.emit('chat message', { from: myName(), value: msg });
+       $('#m').val('');
+       return false;
+     });
+     socket.on('chat message', function(msg) {
+       $('#messages').append($('<li>', { id: 'othermessage' }).text(msg.from + ": " + msg.value));
+       pushChartData(getInput(msg.value), getInput(msg.value));
+     });
+    </script>
+  </body>
+</html>
